@@ -285,7 +285,10 @@ func (sv *ECDSASignatureVerifier) createJWK(pubKeyBytes []byte) (*jose.JWK, erro
 
 	x, y := elliptic.Unmarshal(curve, pubKeyBytes)
 	if x == nil {
-		return nil, errors.New("invalid public key")
+		x, y = elliptic.UnmarshalCompressed(curve, pubKeyBytes)
+		if x == nil {
+			return nil, errors.New("invalid public key")
+		}
 	}
 
 	ecdsaPubKey := &ecdsa.PublicKey{
