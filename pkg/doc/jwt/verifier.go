@@ -26,6 +26,9 @@ const (
 
 	// signatureRS256 defines RS256 alg.
 	signatureRS256 = "RS256"
+
+	// signatureES256K defines ES256K alg.
+	signatureES256K = "ES256K"
 )
 
 const issuerClaim = "iss"
@@ -63,6 +66,10 @@ func NewVerifier(resolver KeyResolver) *BasicVerifier {
 		jose.AlgSignatureVerifier{
 			Alg:      signatureRS256,
 			Verifier: getVerifier(resolver, VerifyRS256),
+		},
+		jose.AlgSignatureVerifier{
+			Alg:      signatureES256K,
+			Verifier: getVerifier(resolver, VerifyES256K),
 		},
 	)
 	// TODO ECDSA to support NIST P256 curve
@@ -142,6 +149,11 @@ func VerifyRS256(pubKey *verifier.PublicKey, message, signature []byte) error {
 	hashed := hash.Sum(nil)
 
 	return rsa.VerifyPKCS1v15(pubKeyRsa, crypto.SHA256, hashed, signature)
+}
+
+// VerifyES256K verifies ES256K signature.
+func VerifyES256K(pubKey *verifier.PublicKey, message, signature []byte) error {
+	return verifier.NewECDSASecp256k1SignatureVerifier().Verify(pubKey, message, signature)
 }
 
 func getIssuerClaim(claims map[string]interface{}) (string, error) {
