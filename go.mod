@@ -21,7 +21,7 @@ require (
 	github.com/hyperledger/aries-framework-go/spi v0.0.0-20210224230531-58e1368e5661
 	github.com/jinzhu/copier v0.0.0-20190924061706-b57f9002281a
 	github.com/kawamuray/jsonpath v0.0.0-20201211160320-7483bafabd7e
-	github.com/kilic/bls12-381 v0.0.0-20201104083100-a288617c07f1
+	github.com/kilic/bls12-381 v0.1.1-0.20210208205449-6045b0235e36
 	github.com/minio/sha256-simd v0.1.1 // indirect
 	github.com/mitchellh/mapstructure v1.1.2
 	github.com/multiformats/go-multibase v0.0.1
@@ -37,7 +37,6 @@ require (
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonschema v1.2.0
 	golang.org/x/crypto v0.0.0-20201002170205-7f63de1d35b0
-	golang.org/x/sys v0.0.0-20201211090839-8ad439b19e0f // indirect
 	google.golang.org/protobuf v1.25.0
 	nhooyr.io/websocket v1.8.3
 )
