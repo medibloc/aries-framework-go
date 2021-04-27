@@ -158,6 +158,10 @@ func VerifyRS256(pubKey *verifier.PublicKey, message, signature []byte) error {
 func VerifyES256K(pubKey *verifier.PublicKey, message, signature []byte) error {
 	// TODO Use crypto for signing/verification logic
 	//  https://github.com/hyperledger/aries-framework-go/issues/1278
+	if len(signature) != 64 {
+		return fmt.Errorf("invalid sig length: %d", len(signature))
+	}
+
 	pub, err := btcec.ParsePubKey(pubKey.Value, btcec.S256())
 	if err != nil {
 		return fmt.Errorf("failed to parse pubkey: %v", err)
