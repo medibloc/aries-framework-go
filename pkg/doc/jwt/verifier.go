@@ -9,14 +9,15 @@ package jwt
 import (
 	"crypto"
 	"crypto/rsa"
+	"crypto/sha256"
 	"crypto/x509"
 	"errors"
 	"fmt"
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
+	"math/big"
 
+	"github.com/btcsuite/btcd/btcec"
 	"github.com/square/go-jose/v3/json"
 	"golang.org/x/crypto/ed25519"
-	"github.com/btcsuite/btcd/btcec"
 
 	"github.com/hyperledger/aries-framework-go/pkg/doc/jose"
 	"github.com/hyperledger/aries-framework-go/pkg/doc/signature/verifier"
@@ -162,16 +163,27 @@ func VerifyES256K(pubKey *verifier.PublicKey, message, signature []byte) error {
 		return fmt.Errorf("failed to parse pubkey: %v", err)
 	}
 
-	sig, err:= btcec.ParseSignature(signature, btcec.S256())
-	if err != nil {
-		return fmt.Errorf("failed to parse signature: %v", err)
-	}
-
-	if !sig.Verify(chainhash.DoubleHashB(message), pub) {
+	sig := signatureFromBytes(signature)
+	if !sig.Verify(Sha256(message), pub) {
 		return fmt.Errorf("failed to verify signature")
 	}
 
 	return nil
+}
+
+// Read Signature struct from R || S. Caller needs to ensure
+// that len(sigStr) == 64.
+func signatureFromBytes(sigStr []byte) *btcec.Signature {
+	return &btcec.Signature{
+		R: new(big.Int).SetBytes(sigStr[:32]),
+		S: new(big.Int).SetBytes(sigStr[32:64]),
+	}
+}
+
+func Sha256(bytes []byte) []byte {
+	hasher := sha256.New()
+	hasher.Write(bytes)
+	return hasher.Sum(nil)
 }
 
 func getIssuerClaim(claims map[string]interface{}) (string, error) {
