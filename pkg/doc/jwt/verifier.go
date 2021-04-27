@@ -12,9 +12,11 @@ import (
 	"crypto/x509"
 	"errors"
 	"fmt"
+	"github.com/btcsuite/btcd/chaincfg/chainhash"
 
 	"github.com/square/go-jose/v3/json"
 	"golang.org/x/crypto/ed25519"
+	"github.com/btcsuite/btcd/btcec"
 
 	"github.com/hyperledger/aries-framework-go/pkg/doc/jose"
 	"github.com/hyperledger/aries-framework-go/pkg/doc/signature/verifier"
@@ -26,6 +28,9 @@ const (
 
 	// signatureRS256 defines RS256 alg.
 	signatureRS256 = "RS256"
+
+	// signatureES256K defines ES256K alg.
+	signatureES256K = "ES256K"
 )
 
 const issuerClaim = "iss"
@@ -63,6 +68,10 @@ func NewVerifier(resolver KeyResolver) *BasicVerifier {
 		jose.AlgSignatureVerifier{
 			Alg:      signatureRS256,
 			Verifier: getVerifier(resolver, VerifyRS256),
+		},
+		jose.AlgSignatureVerifier{
+			Alg:      signatureES256K,
+			Verifier: getVerifier(resolver, VerifyES256K),
 		},
 	)
 	// TODO ECDSA to support NIST P256 curve
@@ -142,6 +151,27 @@ func VerifyRS256(pubKey *verifier.PublicKey, message, signature []byte) error {
 	hashed := hash.Sum(nil)
 
 	return rsa.VerifyPKCS1v15(pubKeyRsa, crypto.SHA256, hashed, signature)
+}
+
+// VerifyES256K verifies ES256K signature.
+func VerifyES256K(pubKey *verifier.PublicKey, message, signature []byte) error {
+	// TODO Use crypto for signing/verification logic
+	//  https://github.com/hyperledger/aries-framework-go/issues/1278
+	pub, err := btcec.ParsePubKey(pubKey.Value, btcec.S256())
+	if err != nil {
+		return fmt.Errorf("failed to parse pubkey: %v", err)
+	}
+
+	sig, err:= btcec.ParseSignature(signature, btcec.S256())
+	if err != nil {
+		return fmt.Errorf("failed to parse signature: %v", err)
+	}
+
+	if !sig.Verify(chainhash.DoubleHashB(message), pub) {
+		return fmt.Errorf("failed to verify signature")
+	}
+
+	return nil
 }
 
 func getIssuerClaim(claims map[string]interface{}) (string, error) {
