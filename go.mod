@@ -14,7 +14,7 @@ require (
 	github.com/cenkalti/backoff/v4 v4.0.2
 	github.com/golang/mock v1.4.4
 	github.com/golang/protobuf v1.5.2
-	github.com/google/tink/go v1.6.1-0.20210519071714-58be99b3c4d0
+	github.com/google/tink/go v1.7.0
 	github.com/google/uuid v1.1.2
 	github.com/gorilla/mux v1.7.3
 	github.com/hyperledger/aries-framework-go/component/storage/edv v0.0.0-20220322085443-50e8f9bd208b
@@ -23,7 +23,7 @@ require (
 	github.com/jinzhu/copier v0.0.0-20190924061706-b57f9002281a
 	github.com/kawamuray/jsonpath v0.0.0-20201211160320-7483bafabd7e
 	github.com/kilic/bls12-381 v0.1.1-0.20210503002446-7b7597926c69
-	github.com/mitchellh/mapstructure v1.1.2
+	github.com/mitchellh/mapstructure v1.4.2
 	github.com/multiformats/go-multibase v0.0.1
 	github.com/multiformats/go-multihash v0.0.13
 	github.com/piprate/json-gold v0.4.1-0.20210813112359-33b90c4ca86c
@@ -35,8 +35,8 @@ require (
 	github.com/tidwall/gjson v1.6.7
 	github.com/tidwall/sjson v1.1.4
 	github.com/xeipuuv/gojsonschema v1.2.0
-	golang.org/x/crypto v0.0.0-20210616213533-5ff15b29337e
-	golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c
+	golang.org/x/crypto v0.0.0-20220214200702-86341886e292
+	golang.org/x/sys v0.0.0-20220209214540-3681064d5158
 	google.golang.org/protobuf v1.27.1
 	nhooyr.io/websocket v1.8.3
 )
@@ -44,8 +44,9 @@ require (
 require (
 	github.com/cespare/xxhash/v2 v2.1.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/golang/snappy v0.0.1 // indirect
+	github.com/golang/snappy v0.0.4 // indirect
 	github.com/klauspost/compress v1.10.0 // indirect
+	github.com/kr/text v0.2.0 // indirect
 	github.com/minio/blake2b-simd v0.0.0-20160723061019-3f5f724cb5b1 // indirect
 	github.com/minio/sha256-simd v0.1.1 // indirect
 	github.com/mr-tron/base58 v1.1.3 // indirect
