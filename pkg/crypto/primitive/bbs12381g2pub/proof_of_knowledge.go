@@ -30,6 +30,7 @@ type PoKOfSignature struct {
 // NewPoKOfSignature creates a new PoKOfSignature.
 func NewPoKOfSignature(signature *Signature, messages []*SignatureMessage, revealedIndexes []int,
 	pubKey *PublicKeyWithGenerators) (*PoKOfSignature, error) {
+	g1 := bls12381.NewG1()
 	err := signature.Verify(messages, pubKey)
 	if err != nil {
 		return nil, fmt.Errorf("verify input signature: %w", err)
@@ -149,6 +150,7 @@ func newVC2Signature(d *bls12381.PointG1, r3 *bls12381.Fr, pubKey *PublicKeyWith
 
 // ToBytes converts PoKOfSignature to bytes.
 func (pos *PoKOfSignature) ToBytes() []byte {
+	g1 := bls12381.NewG1()
 	challengeBytes := g1.ToUncompressed(pos.aBar)
 	challengeBytes = append(challengeBytes, pos.pokVC1.ToBytes()...)
 	challengeBytes = append(challengeBytes, pos.pokVC2.ToBytes()...)
@@ -176,6 +178,7 @@ type ProverCommittedG1 struct {
 
 // ToBytes converts ProverCommittedG1 to bytes.
 func (g *ProverCommittedG1) ToBytes() []byte {
+	g1 := bls12381.NewG1()
 	bytes := make([]byte, 0)
 
 	for _, base := range g.bases {

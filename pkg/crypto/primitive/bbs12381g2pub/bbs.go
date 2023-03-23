@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0
 // Package bbs12381g2pub contains BBS+ signing primitives and keys. Although it can be used directly, it is recommended
 // to use BBS+ keys created by the kms along with the framework's Crypto service.
 // The default local Crypto service is found at: "github.com/hyperledger/aries-framework-go/pkg/crypto/tinkcrypto"
-//  while the remote Crypto service is found at: "github.com/hyperledger/aries-framework-go/pkg/crypto/webkms"
+// while the remote Crypto service is found at: "github.com/hyperledger/aries-framework-go/pkg/crypto/webkms"
 package bbs12381g2pub
 
 import (
@@ -16,12 +16,6 @@ import (
 	"sort"
 
 	bls12381 "github.com/kilic/bls12-381"
-)
-
-// nolint:gochecknoglobals
-var (
-	g1 = bls12381.NewG1()
-	g2 = bls12381.NewG2()
 )
 
 // BBSG2Pub defines BBS+ signature scheme where public key is a point in the field of G2.
@@ -194,6 +188,7 @@ func (bbs *BBSG2Pub) DeriveProof(messages [][]byte, sigBytes, nonce, pubKeyBytes
 // SignWithKey signs the one or more messages using BBS+ key pair.
 func (bbs *BBSG2Pub) SignWithKey(messages [][]byte, privKey *PrivateKey) ([]byte, error) {
 	var err error
+	g1 := bls12381.NewG1()
 
 	pubKey := privKey.PublicKey()
 	messagesCount := len(messages)
@@ -229,6 +224,7 @@ func (bbs *BBSG2Pub) SignWithKey(messages [][]byte, privKey *PrivateKey) ([]byte
 
 func computeB(s *bls12381.Fr, messages []*SignatureMessage, key *PublicKeyWithGenerators) *bls12381.PointG1 {
 	const basesOffset = 2
+	g1 := bls12381.NewG1()
 
 	cb := newCommitmentBuilder(len(messages) + basesOffset)
 
@@ -264,6 +260,7 @@ func (cb *commitmentBuilder) build() *bls12381.PointG1 {
 }
 
 func sumOfG1Products(bases []*bls12381.PointG1, scalars []*bls12381.Fr) *bls12381.PointG1 {
+	g1 := bls12381.NewG1()
 	res := g1.Zero()
 
 	for i := 0; i < len(bases); i++ {

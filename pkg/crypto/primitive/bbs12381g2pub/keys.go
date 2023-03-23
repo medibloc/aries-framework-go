@@ -84,6 +84,7 @@ func (pk *PublicKey) ToPublicKeyWithGenerators(messagesCount int) (*PublicKeyWit
 }
 
 func calcData(key *PublicKey, messagesCount int) []byte {
+	g2 := bls12381.NewG2()
 	data := g2.ToUncompressed(key.PointG2)
 
 	data = append(data, 0, 0, 0, 0, 0, 0)
@@ -96,6 +97,7 @@ func calcData(key *PublicKey, messagesCount int) []byte {
 }
 
 func hashToG1(data []byte) (*bls12381.PointG1, error) {
+	g1 := bls12381.NewG1()
 	dstG1 := []byte("BLS12381G1_XMD:BLAKE2B_SSWU_RO_BBS+_SIGNATURES:1_0_0")
 
 	hashFunc := func() hash.Hash {
@@ -135,6 +137,7 @@ func (k *PrivateKey) Marshal() ([]byte, error) {
 
 // PublicKey returns a Public Key as G2 point generated from the Private Key.
 func (k *PrivateKey) PublicKey() *PublicKey {
+	g2 := bls12381.NewG2()
 	pointG2 := g2.One()
 	g2.MulScalar(pointG2, pointG2, frToRepr(k.FR))
 
@@ -143,6 +146,7 @@ func (k *PrivateKey) PublicKey() *PublicKey {
 
 // UnmarshalPublicKey parses a PublicKey from bytes.
 func UnmarshalPublicKey(pubKeyBytes []byte) (*PublicKey, error) {
+	g2 := bls12381.NewG2()
 	if len(pubKeyBytes) != bls12381G2PublicKeyLen {
 		return nil, errors.New("invalid size of public key")
 	}
@@ -159,6 +163,7 @@ func UnmarshalPublicKey(pubKeyBytes []byte) (*PublicKey, error) {
 
 // Marshal marshals PublicKey.
 func (pk *PublicKey) Marshal() ([]byte, error) {
+	g2 := bls12381.NewG2()
 	pkBytes := g2.ToCompressed(pk.PointG2)
 
 	return pkBytes, nil
