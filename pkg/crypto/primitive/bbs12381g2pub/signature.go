@@ -25,6 +25,7 @@ func ParseSignature(sigBytes []byte) (*Signature, error) {
 	if len(sigBytes) != bls12381SignatureLen {
 		return nil, errors.New("invalid size of signature")
 	}
+	g1 := bls12381.NewG1()
 
 	pointG1, err := g1.FromCompressed(sigBytes[:g1CompressedSize])
 	if err != nil {
@@ -43,6 +44,7 @@ func ParseSignature(sigBytes []byte) (*Signature, error) {
 
 // ToBytes converts signature to bytes using compression of G1 point and E, S FR points.
 func (s *Signature) ToBytes() ([]byte, error) {
+	g1 := bls12381.NewG1()
 	bytes := make([]byte, bls12381SignatureLen)
 
 	copy(bytes, g1.ToCompressed(s.A))
@@ -55,6 +57,8 @@ func (s *Signature) ToBytes() ([]byte, error) {
 // Verify is used for signature verification.
 func (s *Signature) Verify(messages []*SignatureMessage, pubKey *PublicKeyWithGenerators) error {
 	p1 := s.A
+	g1 := bls12381.NewG1()
+	g2 := bls12381.NewG2()
 
 	q1 := g2.One()
 	g2.MulScalar(q1, q1, frToRepr(s.E))
